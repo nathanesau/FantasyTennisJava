@@ -7,6 +7,8 @@ import java.awt.event.*;
 // not tested
 public class SavePredictionsDialog extends JDialog {
 
+    private static final long serialVersionUID = 360L;
+
     // widgets
     JLabel fileNameLabel;
     JTextField fileNameLE;

@@ -2,9 +2,13 @@ package fantasytennisjava;
 
 import javax.swing.*;
 import java.awt.event.*;
+import java.util.*;
+import java.lang.Math;
 
 // tested
 public class MainWindow extends JFrame {
+
+    private static final long serialVersionUID = 378L;
 
     // widgets
     JButton button;
@@ -46,10 +50,24 @@ public class MainWindow extends JFrame {
         // event listeners
         this.downloadBracketItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                DownloadDialog.downloadArchive(2019, "out");
-                String[] downloadOptions = DownloadDialog.getDownloadOptions("tmp");
-                DownloadDialog dialog = new DownloadDialog(downloadOptions, "out.html");
+                // key: tournament title, value: tourney link
+                Map<String, String> downloadOptions = DownloadDialog.getDownloadOptions();
+                DownloadDialog dialog = new DownloadDialog(MainWindow.this, downloadOptions);
                 dialog.setVisible(true);
+
+                String tourneyTitle = dialog.urlComboBox.getSelectedItem().toString();
+                String url = "https://www.atptour.com" + downloadOptions.get(tourneyTitle);
+
+                ATPTournamentParser parser = new ATPTournamentParser();
+                parser.parseTournamentURL(url);
+                parser.fillDrawRowList();
+                parser.fillPlayerRowList();
+                
+                TennisData data = new TennisData(parser.drawRowList, parser.playerRowList);
+                TennisDatabase db = new TennisDatabase();
+                db.saveDrawToDb(data);
+
+                JOptionPane.showMessageDialog(MainWindow.this, "Bracket has been written to DB");
             }
         });
 
@@ -107,11 +125,11 @@ public class MainWindow extends JFrame {
         this.menuBar.add(this.fileMenu);
         this.menuBar.add(this.editMenu);
         this.menuBar.add(this.predictionsMenu);
-        
+
         // frame
         ImageIcon logo = new ImageIcon("res/icon.png");
         this.setIconImage(logo.getImage());
-        this.setSize(400,500);
+        this.setSize(400, 500);
         this.setLayout(null);
         this.setTitle("Fantasy Tennis");
         this.setJMenuBar(this.menuBar);

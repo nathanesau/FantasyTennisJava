@@ -1,11 +1,13 @@
 package fantasytennisjava;
 
 import javax.swing.*;
-import java.awt.*; // FlowLayout
+import java.awt.*;
 import java.awt.event.*;
 
 // not tested
 public class PreferencesDialog extends JDialog {
+
+    private static final long serialVersionUID = 175L;
 
     // widgets
     JLabel dataDirLabel;

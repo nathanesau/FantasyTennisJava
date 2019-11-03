@@ -1,15 +1,17 @@
 package fantasytennisjava;
 
 import javax.swing.*;
-import java.awt.*; // FlowLayout
+import java.awt.*;
 import java.awt.event.*;
 
 // not tested
 public class ConvertHTMLDialog extends JDialog {
 
+    private static final long serialVersionUID = 690L;
+
     // widgets
     JLabel fileLabel;
-    JComboBox fileComboBox;
+    JComboBox<String> fileComboBox;
     JButton okButton;
     FlowLayout mainLayout;
 
@@ -20,7 +22,7 @@ public class ConvertHTMLDialog extends JDialog {
         this.fileLabel = new JLabel();
         this.fileLabel.setText("Select HTML file to convert");
         String[] cbItems = ConvertHTMLDialog.getCbItems();
-        this.fileComboBox = new JComboBox(cbItems);
+        this.fileComboBox = new JComboBox<String>(cbItems);
         this.okButton = new JButton();
         this.okButton.setText("OK");
 

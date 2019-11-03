@@ -7,8 +7,10 @@ import java.awt.event.*;
 // tested
 public class LoadBracketDialog extends JFrame {
 
+    private static final long serialVersionUID = 860L;
+
     JLabel fileLabel;
-    JComboBox fileComboBox;
+    JComboBox<String> fileComboBox;
     JButton okButton;
     FlowLayout mainLayout;
 
@@ -19,7 +21,7 @@ public class LoadBracketDialog extends JFrame {
         this.fileLabel = new JLabel();
         this.fileLabel.setText("Select bracket to load");
         String[] cbItems = LoadBracketDialog.getFileComboBoxItems();
-        this.fileComboBox = new JComboBox(cbItems);
+        this.fileComboBox = new JComboBox<String>(cbItems);
         this.okButton = new JButton();
         this.okButton.setText("OK");
 

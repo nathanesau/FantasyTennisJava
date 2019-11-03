@@ -1,13 +1,16 @@
 package fantasytennisjava;
 
 import javax.swing.*;
-import java.awt.*; // FlowLayout
+import java.awt.*;
 import java.awt.event.*;
 
 // not tested
 public class LoadPredictionsDialog extends JDialog {
+
+    private static final long serialVersionUID = 335L;
+
     JLabel fileLabel;
-    JComboBox fileComboBox;
+    JComboBox<String> fileComboBox;
     JButton okButton;
     FlowLayout mainLayout;
 
@@ -18,7 +21,7 @@ public class LoadPredictionsDialog extends JDialog {
         this.fileLabel = new JLabel();
         this.fileLabel.setText("Select predictions to load");
         String[] cbItems = LoadPredictionsDialog.getCbItems();
-        this.fileComboBox = new JComboBox(cbItems);
+        this.fileComboBox = new JComboBox<String>(cbItems);
         this.okButton = new JButton();
         this.okButton.setText("OK");
 

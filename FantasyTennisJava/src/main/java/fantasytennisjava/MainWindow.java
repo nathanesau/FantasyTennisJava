@@ -2,25 +2,22 @@ package fantasytennisjava;
 
 import javax.swing.*;
 import java.awt.event.*;
+import java.awt.*;
 import java.util.*;
-import java.lang.Math;
 
 // tested
 public class MainWindow extends JFrame {
 
     private static final long serialVersionUID = 378L;
 
-    // widgets
-    JButton button;
+    // widget
+    JLabel instructionLabel;
 
     // menus
     JMenuBar menuBar;
     JMenu fileMenu;
     JMenuItem downloadBracketItem;
-    JMenuItem convertHTMLToDbItem;
     JMenuItem loadBracketItem;
-    JMenu editMenu;
-    JMenuItem preferencesItem;
     JMenu predictionsMenu;
     JMenuItem savePredictionsItem;
     JMenuItem loadPredictionsItem;
@@ -29,19 +26,18 @@ public class MainWindow extends JFrame {
         super(); // invoke parent constructor
 
         // widgets
-        this.button = new JButton("Click");
-        this.button.setBounds(130, 100, 100, 100); // x, y, width, height
-        this.add(button);
+        this.instructionLabel = new JLabel();
+        this.instructionLabel.setText("Load a bracket to get started...");
 
+        this.setLayout(new GridBagLayout ());
+        this.add(this.instructionLabel);
+        this.pack();
+    
         // menu items
         this.downloadBracketItem = new JMenuItem();
         this.downloadBracketItem.setText("Download Bracket");
-        this.convertHTMLToDbItem = new JMenuItem();
-        this.convertHTMLToDbItem.setText("Convert HTML to DB");
         this.loadBracketItem = new JMenuItem();
         this.loadBracketItem.setText("Load Bracket");
-        this.preferencesItem = new JMenuItem();
-        this.preferencesItem.setText("Preferences");
         this.savePredictionsItem = new JMenuItem();
         this.savePredictionsItem.setText("Save Predictions");
         this.loadPredictionsItem = new JMenuItem();
@@ -58,6 +54,13 @@ public class MainWindow extends JFrame {
                 String tourneyTitle = dialog.urlComboBox.getSelectedItem().toString();
                 String url = "https://www.atptour.com" + downloadOptions.get(tourneyTitle);
 
+                // get tournament db name from url
+                int startIndex = url.indexOf("archive");
+                int endIndex = url.indexOf("draws");
+                String dbName = url.substring(startIndex + 8, endIndex - 1);
+                dbName = dbName.replace('/', '_');
+                dbName += ".db";
+
                 ATPTournamentParser parser = new ATPTournamentParser();
                 parser.parseTournamentURL(url);
                 parser.fillDrawRowList();
@@ -65,29 +68,15 @@ public class MainWindow extends JFrame {
                 
                 TennisData data = new TennisData(parser.drawRowList, parser.playerRowList);
                 TennisDatabase db = new TennisDatabase();
-                db.saveDrawToDb(data);
+                db.saveDrawToDb(dbName, data);
 
-                JOptionPane.showMessageDialog(MainWindow.this, "Bracket has been written to DB");
-            }
-        });
-
-        this.convertHTMLToDbItem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                ConvertHTMLDialog dialog = new ConvertHTMLDialog();
-                dialog.setVisible(true);
+                JOptionPane.showMessageDialog(MainWindow.this, "Bracket has been written to " + dbName);
             }
         });
 
         this.loadBracketItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 LoadBracketDialog dialog = new LoadBracketDialog();
-                dialog.setVisible(true);
-            }
-        });
-
-        this.preferencesItem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                PreferencesDialog dialog = new PreferencesDialog();
                 dialog.setVisible(true);
             }
         });
@@ -110,11 +99,7 @@ public class MainWindow extends JFrame {
         this.fileMenu = new JMenu();
         this.fileMenu.setText("File");
         this.fileMenu.add(this.downloadBracketItem);
-        this.fileMenu.add(this.convertHTMLToDbItem);
         this.fileMenu.add(this.loadBracketItem);
-        this.editMenu = new JMenu();
-        this.editMenu.setText("Edit");
-        this.editMenu.add(this.preferencesItem);
         this.predictionsMenu = new JMenu();
         this.predictionsMenu.setText("Predictions");
         this.predictionsMenu.add(this.savePredictionsItem);
@@ -123,7 +108,6 @@ public class MainWindow extends JFrame {
         // menu bar
         this.menuBar = new JMenuBar();
         this.menuBar.add(this.fileMenu);
-        this.menuBar.add(this.editMenu);
         this.menuBar.add(this.predictionsMenu);
 
         // frame

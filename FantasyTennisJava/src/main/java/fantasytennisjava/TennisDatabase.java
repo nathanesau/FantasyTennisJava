@@ -86,10 +86,10 @@ public class TennisDatabase {
         }
     }
 
-    public void saveDrawToDb(TennisData data) {
+    public void saveDrawToDb(String dbName, TennisData data) {
         try {
             // create connection
-            conn = DriverManager.getConnection("jdbc:sqlite:test.db");
+            conn = DriverManager.getConnection("jdbc:sqlite:" + dbName);
             stmt = conn.createStatement();
             
             // create tables
@@ -107,10 +107,10 @@ public class TennisDatabase {
         }
     }
 
-    public void loadDrawFromDb(TennisData data) {
+    public void loadDrawFromDb(String dbName, TennisData data) {
         try {
             // create connection
-            conn = DriverManager.getConnection("jdbc:sqlite:wimbledon.db");
+            conn = DriverManager.getConnection("jdbc:sqlite:" + dbName);
             stmt = conn.createStatement();
 
             // load tables

@@ -48,7 +48,7 @@ public class LoadBracketDialog extends JFrame {
     }
 
     static String[] getFileComboBoxItems() {
-        // todo: walk through root, directories, files in data directory to fill cbItems
+        // https://www.mkyong.com/java/java-how-to-list-all-files-in-a-directory/
         String[] cbItems = {"us_open.db", "french_open.db", "rogers_cup.db"};
         return cbItems;
     }

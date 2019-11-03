@@ -12,8 +12,6 @@ public class DownloadDialog extends JDialog {
 
     JLabel urlLabel;
     JComboBox<String> urlComboBox;
-    JLabel fnameLabel;
-    JTextField fnameLE;
     JButton okButton;
     FlowLayout mainLayout;
 
@@ -25,11 +23,6 @@ public class DownloadDialog extends JDialog {
         this.urlLabel.setText("Specify tournament to download HTML bracket for...");
         String []cbItems = downloadOptions.keySet().toArray(new String[0]);
         this.urlComboBox = new JComboBox<String>(cbItems);
-        this.fnameLabel = new JLabel();
-        this.fnameLabel.setText("Specify output filename...");
-        this.fnameLE = new JTextField();
-        this.fnameLE.setText("out.html");
-        this.fnameLE.setToolTipText("Example: out.html");
         this.okButton = new JButton();
         this.okButton.setText("OK");
 
@@ -38,8 +31,6 @@ public class DownloadDialog extends JDialog {
         this.setLayout(this.mainLayout);
         this.add(this.urlLabel);
         this.add(this.urlComboBox);
-        this.add(this.fnameLabel);
-        this.add(this.fnameLE);
         this.add(this.okButton);
 
         // event listeners
@@ -57,9 +48,6 @@ public class DownloadDialog extends JDialog {
     }
 
     static Map<String, String> getDownloadOptions() {
-        
-        Map<String, String> downloadOptions = new HashMap<String, String>();
-
         ATPArchiveParser parser = new ATPArchiveParser();
         parser.parseArchiveURL("https://www.atptour.com/en/scores/results-archive?year=2019");
 

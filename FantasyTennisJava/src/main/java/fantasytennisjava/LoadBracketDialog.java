@@ -3,9 +3,11 @@ package fantasytennisjava;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.*;
+import java.util.*;
 
 // tested
-public class LoadBracketDialog extends JFrame {
+public class LoadBracketDialog extends JDialog {
 
     private static final long serialVersionUID = 860L;
 
@@ -14,13 +16,13 @@ public class LoadBracketDialog extends JFrame {
     JButton okButton;
     FlowLayout mainLayout;
 
-    LoadBracketDialog() {
-        super(); // invoke parent constructor
+    LoadBracketDialog(JFrame parent, ArrayList<String> loadOptions) {
+        super(parent, Dialog.ModalityType.DOCUMENT_MODAL); // invoke parent constructor
 
         // widgets
         this.fileLabel = new JLabel();
         this.fileLabel.setText("Select bracket to load");
-        String[] cbItems = LoadBracketDialog.getFileComboBoxItems();
+        String[] cbItems = loadOptions.toArray(new String[0]);
         this.fileComboBox = new JComboBox<String>(cbItems);
         this.okButton = new JButton();
         this.okButton.setText("OK");
@@ -35,8 +37,7 @@ public class LoadBracketDialog extends JFrame {
         // event listeners
         this.okButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                // todo: load bracket
-                JOptionPane.showMessageDialog(null, "Bracket has been loaded");
+                dispose();
             }
         });
 
@@ -47,9 +48,17 @@ public class LoadBracketDialog extends JFrame {
         this.setSize(400, 500);
     }
 
-    static String[] getFileComboBoxItems() {
-        // https://www.mkyong.com/java/java-how-to-list-all-files-in-a-directory/
-        String[] cbItems = {"us_open.db", "french_open.db", "rogers_cup.db"};
-        return cbItems;
+    static ArrayList<String> getLoadOptions() {
+        ArrayList<String> loadOptions = new ArrayList<String>();
+
+        File folder = new File(".");
+        File[] listOfFiles = folder.listFiles(); 
+        for(File currentFile : listOfFiles) {
+            if(currentFile.getName().endsWith(".db")) {
+                loadOptions.add(currentFile.getName());
+            }
+        }
+
+        return loadOptions;
     }
 }

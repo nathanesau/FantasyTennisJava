@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.awt.*;
 import java.util.*;
+import org.apache.commons.lang3.tuple.*;
 
 // tested
 public class MainWindow extends JFrame {
@@ -18,9 +19,6 @@ public class MainWindow extends JFrame {
     JMenu fileMenu;
     JMenuItem downloadBracketItem;
     JMenuItem loadBracketItem;
-    JMenu predictionsMenu;
-    JMenuItem savePredictionsItem;
-    JMenuItem loadPredictionsItem;
 
     MainWindow() {
         super(); // invoke parent constructor
@@ -38,10 +36,6 @@ public class MainWindow extends JFrame {
         this.downloadBracketItem.setText("Download Bracket");
         this.loadBracketItem = new JMenuItem();
         this.loadBracketItem.setText("Load Bracket");
-        this.savePredictionsItem = new JMenuItem();
-        this.savePredictionsItem.setText("Save Predictions");
-        this.loadPredictionsItem = new JMenuItem();
-        this.loadPredictionsItem.setText("Load Predictions");
 
         // event listeners
         this.downloadBracketItem.addActionListener(new ActionListener() {
@@ -76,22 +70,18 @@ public class MainWindow extends JFrame {
 
         this.loadBracketItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                LoadBracketDialog dialog = new LoadBracketDialog();
+                ArrayList<String> loadOptions = LoadBracketDialog.getLoadOptions();
+                LoadBracketDialog dialog = new LoadBracketDialog(MainWindow.this, loadOptions);
                 dialog.setVisible(true);
-            }
-        });
 
-        this.savePredictionsItem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                SavePredictionsDialog dialog = new SavePredictionsDialog("out.db");
-                dialog.setVisible(true);
-            }
-        });
+                String dbName = dialog.fileComboBox.getSelectedItem().toString();
+                ArrayList<Triple<Integer, String, String>> drawRowList = new ArrayList<Triple<Integer, String, String>>();
+                ArrayList<Triple<String, String, String>> playerRowList = new ArrayList<Triple<String, String, String>>();
+                TennisData data = new TennisData(drawRowList, playerRowList);
+                TennisDatabase db = new TennisDatabase();
+                db.loadDrawFromDb(dbName, data);
 
-        this.loadPredictionsItem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                LoadPredictionsDialog dialog = new LoadPredictionsDialog();
-                dialog.setVisible(true);
+                JOptionPane.showMessageDialog(MainWindow.this, "Bracket " + dbName + " has been loaded");
             }
         });
 
@@ -100,15 +90,10 @@ public class MainWindow extends JFrame {
         this.fileMenu.setText("File");
         this.fileMenu.add(this.downloadBracketItem);
         this.fileMenu.add(this.loadBracketItem);
-        this.predictionsMenu = new JMenu();
-        this.predictionsMenu.setText("Predictions");
-        this.predictionsMenu.add(this.savePredictionsItem);
-        this.predictionsMenu.add(this.loadPredictionsItem);
 
         // menu bar
         this.menuBar = new JMenuBar();
         this.menuBar.add(this.fileMenu);
-        this.menuBar.add(this.predictionsMenu);
 
         // frame
         ImageIcon logo = new ImageIcon("res/icon.png");

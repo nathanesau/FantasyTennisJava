@@ -105,7 +105,7 @@ public class ATPTournamentParser {
 
             // numWinsDict
             for(String playerName : round1Players) {
-                int numWins = Collections.frequency(round1Players, playerName);
+                int numWins = Collections.frequency(winPlayers, playerName);
                 numWinsDict.put(playerName, numWins);
             }
 
@@ -134,8 +134,7 @@ public class ATPTournamentParser {
     public void fillDrawRowList() {
         int drawSize = this.round1Players.size();
         int numRounds = (int) (Math.log((double) drawSize) / Math.log(2.0));
-        int[] allowedDrawSizes = {8, 16, 32, 64, 128};
-        assert(Arrays.asList(allowedDrawSizes).contains(drawSize));
+        assert(drawSize == 8 || drawSize == 16 || drawSize == 32 || drawSize == 64 || drawSize == 128);
 
         ArrayList<ArrayList<Pair<String, String>>> roundInfo = new ArrayList<ArrayList<Pair<String, String>>>();
 
